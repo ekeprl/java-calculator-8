@@ -19,7 +19,14 @@ public class Application {
     private static void calculate(String[] numbers) {
         int sum = 0;
         for (String number : numbers) {
-            sum += Integer.parseInt(number);
+            int value = Integer.parseInt(number);
+
+            //음수체크 로직 수정
+            if (value < 0) {
+                throw new IllegalArgumentException("음수는 허용되지 않습니다: " + value);
+            }
+
+            sum += value;
         }
 
         System.out.println("결과 : " + sum);
@@ -28,16 +35,21 @@ public class Application {
     //입력값 & 검증
     private static String getInput() {
         System.out.println("문자열을 입력해 주세요.");
-        var input = Console.readLine();
+        String input;
 
-        //숫자앞에 "-"가 붙었을때(음수일때만 포함하도록 수정)
-        if (input.matches(".*[^0-9]-[0-9].*") || input.matches("^-\\d.*")) {
-            throw new IllegalArgumentException("음수는 허용되지 않습니다.");
+        //emptyInput 테스트를 진행하면 테스트 실패오류가 발생 -> 예외처리 진행
+        try {
+            input = Console.readLine();
+        } catch (Exception e) {
+            // Scanner 입력x
+            input = "";
         }
 
-        if (input.isEmpty()) {
+        if (input == null || input.isEmpty()) {
             return "0";
         }
+
+        // 숫자 앞 "-" 체크는 여기서 하지 않고 calculate()에서 처리 가능
         return input;
     }
 
@@ -78,6 +90,7 @@ public class Application {
 
         return numbers.toArray(new String[0]);
     }
+
 
 }
 
