@@ -15,7 +15,7 @@ public class Application {
         calculate(numbers);
     }
 
-    //추출값 덧셈
+    //추출값 계산
     private static void calculate(String[] numbers) {
         int sum = 0;
         for (String number : numbers) {
@@ -53,7 +53,7 @@ public class Application {
         return input;
     }
 
-
+    //구분자 처리
     private static String[] getSplitNumbers(String input) {
         // 1. 기본 구분자 목록
         StringBuilder delimiters = new StringBuilder("[,:");
@@ -79,12 +79,14 @@ public class Application {
         // 4. 구분자를 기준으로 split
         String[] parts = input.split(delimiters.toString());
 
-        // 5. 숫자만 필터링 (빈 문자열이나 비숫자 제외)
+        // 5. 숫자만 필터링
         List<String> numbers = new ArrayList<>();
         for (String part : parts) {
             part = part.trim();
-            if (part.matches("-?\\d+")) { // 음수 포함 숫자만
+            if (part.matches("-?\\d+")) { // 숫자만
                 numbers.add(part);
+            } else if (part.matches("[a-zA-Z가-힣]+")) { // 문자만
+                throw new IllegalArgumentException("숫자가 아닌 값이 포함되어 있습니다: " + part);
             }
         }
 
