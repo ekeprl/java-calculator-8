@@ -48,10 +48,14 @@
 - 테스트 케이스 추가
    - 기본 숫자 입력 및 덧셈 테스트(restNumbers)
    - 기본 구분자 처리 테스트(DefaultDelimiters)
+      - 위의 두 케이스 하나의 테스트 케이스로 수정(굳이 나눌 필요x) 
    - 커스텀 구분자 단일(singleDelimiter) 및 다수(multiDelimiters) 처리 테스트
    - 음수 입력 시 예외 발생 테스트(negativeNumbers)
+      - errmsg 추가
    - 빈 입력(emptyInput) 및 공백 포함 입력(blankInput) 테스트
    - 연속 구분자(continuousDelimiters) 처리 테스트
    - 숫자 외 문자(nonNumberIgnored) 포함 테스트
+      - errmsg 추가
    - 0 포함(zeroInput) 테스트
+      -테스트 케이스 제거 
    - getSplitNumbers()와 getInput() 기능을 테스트에 맞게 검증
