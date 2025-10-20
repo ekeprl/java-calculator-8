@@ -10,15 +10,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ApplicationTest extends NsTest {
 
 
-    // 단순 숫자
-    @Test
-    void restNumbers() {
-        assertSimpleTest(() -> {
-            run("1,2,3");
-            assertThat(output()).contains("결과 : 6");
-        });
-    }
-
 
     // 기본 구분자
     @Test
@@ -34,7 +25,7 @@ class ApplicationTest extends NsTest {
     @Test
     void singleDelimiter() {
         assertSimpleTest(() -> {
-            run("//;\n1;2;3");
+            run("//;\\n1;2;3");
             assertThat(output()).contains("결과 : 6");
         });
     }
@@ -44,7 +35,7 @@ class ApplicationTest extends NsTest {
     @Test
     void multiDelimiters() {
         assertSimpleTest(() -> {
-            run("//;>\n1;2>3");
+            run("//;>\\n1;2>3");
             assertThat(output()).contains("결과 : 6");
         });
     }
@@ -54,11 +45,12 @@ class ApplicationTest extends NsTest {
     @Test
     void negativeNumbers() {
         assertThatThrownBy(() -> runException("-1,2,3"))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("음수는 허용되지 않습니다: -1"); // value 값 포함
 
         // 커스텀 구분자는 "-" 사용 가능하도록
         assertSimpleTest(() -> {
-            run("//-\n1-2-3");
+            run("//-\\n1-2-3");
             assertThat(output()).contains("결과 : 6");
         });
     }
@@ -96,10 +88,21 @@ class ApplicationTest extends NsTest {
 
     // 숫자 외 문자 포함
     @Test
-    void nonNumberIgnored() {
+    void wordsIgnored() {
         assertSimpleTest(() -> {
-            run("1,a,2");
-            assertThat(output()).contains("결과 : 3");
+            assertThatThrownBy(() -> runException("1,a,2"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("숫자가 아닌 값이 포함되어 있습니다: a");
+        });
+    }
+
+    // 문자만 입력
+    @Test
+    void onlyWord() {
+        assertSimpleTest(() -> {
+            assertThatThrownBy(() -> runException("a,b,c"))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessageContaining("숫자가 아닌 값이 포함되어 있습니다: a");
         });
     }
 
